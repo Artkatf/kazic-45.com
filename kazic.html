@@ -2,15 +2,16 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Казино</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #38bdf8;
-            --text: #f8fafc;
-            --danger: #ef4444;
-            --success: #22c55e;
+            --bg-color: #0f172a;       /* Почти чёрный, как на фото */
+            --card-bg: #1e293b;         /* Цвет карточек */
+            --accent: #38bdf8;          /* Неоновый голубой */
+            --text: #f8fafc;            /* Белый текст */
+            --danger: #ef4444;           /* Красный для ошибок */
+            --success: #22c55e;         /* Зелёный для успеха */
         }
         body {
             margin: 0;
@@ -20,6 +21,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
         }
+        /* Шапка с балансом */
         .header {
             display: flex;
             justify-content: space-between;
@@ -44,8 +46,10 @@
             border: none;
             color: var(--accent);
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
+            font-weight: bold;
         }
+        /* Главное меню (2 слота) */
         .main-menu {
             padding: 20px;
             display: grid;
@@ -69,9 +73,11 @@
         .slot-card p { margin: 0; opacity: 0.8; }
 
         /* Страница слота */
-        .slot-page {
-            display: none;
+        .slot-page, .promo-page {
+            display: none; /* Скрыто по умолчанию */
             padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
         }
         .bet-area {
             margin-bottom: 20px;
@@ -79,24 +85,28 @@
         }
         .bet-area label { display: block; margin-bottom: 5px; font-weight: bold; }
         .bet-area input {
-                width: 100%;
-                padding: 10px;
-                background-color: #0f172a;
-                border: 1px solid #334155;
-                color: white;
-                border-radius: 6px;
-                box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
         }
         .bet-area button {
-                margin-top: 10px;
-                padding: 10px 20px;
-                background-color: var(--accent);
-                border: none;
-                color: #0f172a;
-                font-weight: bold;
-                border-radius: 6px;
-                cursor: pointer;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: var(--accent);
+            border: none;
+            color: #0f172a;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
         }
+        
+        /* Барабаны */
         .reels-container {
             display: flex;
             justify-content: center;
@@ -113,29 +123,30 @@
             justify-content: center;
             font-size: 40px;
             color: white;
-            overflow: hidden;
-            position: relative;
+            overflow: hidden;position: relative;
+            border: 2px solid var(--accent);
         }
+        /* Анимация вращения */
         .reel.spinning {
-            animation: spin 0.2s infinite linear;
+            animation: spin 0.1s infinite linear;
         }
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+
+        /* Сообщения */
         .message-box {
             margin-top: 20px;
             min-height: 24px;
             font-weight: bold;
             text-align: center;
+            font-size: 18px;
         }
         .message-error { color: var(--danger); }
-        .message-success { color: var(--success); }/* Промокод страница */
-        .promo-page {
-            display: none;
-            padding: 20px;
-            text-align: center;
-        }
+        .message-success { color: var(--success); }
+
+        /* Страница промокода */
         .promo-page input {
             display: block;
             width: 100%;
@@ -147,6 +158,7 @@
             color: white;
             border-radius: 6px;
             box-sizing: border-box;
+            font-size: 16px;
         }
         .promo-page button {
             padding: 10px 20px;
@@ -156,9 +168,11 @@
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
+            font-size: 16px;
         }
 
-        .back-btn {
+        /* Кнопки навигации */
+        .back-btn, .back-btn-promo {
             margin-top: 20px;
             padding: 10px 20px;
             background-color: #334155;
@@ -166,21 +180,22 @@
             color: white;
             border-radius: 6px;
             cursor: pointer;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- Верхняя панель -->
     <div class="header">
-        <div class="logo">CASINO X</div>
+        <div class="logo" style="font-weight: bold; color: var(--accent);">CASINO X</div>
         <div class="balance-box">
             Баланс: <span id="balance-display">100000</span>
             <button id="open-promo-btn">+</button>
         </div>
     </div>
 
-    <!-- Main Menu -->
+    <!-- ГЛАВНОЕ МЕНЮ: 2 СЛОТА -->
     <div class="main-menu" id="main-menu">
         <div class="slot-card" onclick="openSlot(1)">
             <h3>Слот №1</h3>
@@ -192,9 +207,9 @@
         </div>
     </div>
 
-    <!-- Slot Page -->
+    <!-- СТРАНИЦА СЛОТА -->
     <div class="slot-page" id="slot-page">
-        <h2>Игровой автомат</h2>
+        <h2 style="text-align: center;">Игровой автомат</h2>
         <div class="bet-area">
             <label>Введите сумму ставки:</label>
             <input type="number" id="bet-amount" placeholder="Например: 1000">
@@ -205,34 +220,35 @@
             <div class="reel" id="reel-2">?</div>
             <div class="reel" id="reel-3">?</div>
         </div>
-        <button onclick="spinReels()" id="spin-btn" disabled>КРУТИТЬ</button>
+        <button onclick="spinReels()" id="spin-btn" disabled style="width: 100%; padding: 15px; font-size: 18px;">КРУТИТЬ</button>
         <div class="message-box" id="message-box"></div>
         <button class="back-btn" onclick="goBack()">← Назад в лобби</button>
     </div>
 
-    <!-- Promo Page -->
+    <!-- СТРАНИЦА ПРОМОКОДА -->
     <div class="promo-page" id="promo-page">
-        <h2>Промокод</h2>
-        <p>Введите промокод для получения бонуса:</p>
+        <h2 style="text-align: center;">Промокод</h2>
+        <p style="text-align: center;">Введите промокод для получения бонуса:</p>
         <input type="text" id="promo-code" placeholder="Например: Pasha">
         <button onclick="applyPromo()">Активировать</button>
-        <button class="back-btn" onclick="goBack()">← Назад</button>
+        <button class="back-btn-promo" onclick="goBack()">← Назад</button>
     </div>
 
     <script>
-        // State
+        // --- НАСТРОЙКИ ИГРЫ ---
         let balance = 100000;
+        
+        // Символы: name (имя), val (выплата), freq (частота: чем меньше, тем реже)
         const SYMBOLS = [
             { name: 'Персик', val: 100, freq: 15 },
-            { name: 'Слива', val: 500, freq: 12 },
-            { name: 'Лимон', val: 1000, freq: 10 },
+            { name: 'Слива', val: 500, freq: 12 },{ name: 'Лимон', val: 1000, freq: 10 },
             { name: 'Клубника', val: 1500, freq: 8 },
             { name: 'Малина', val: 2000, freq: 6 },
             { name: '9', val: 5000, freq: 4 },
             { name: '7', val: 3000, freq: 3 },
         ];
 
-        // DOM Elements
+        // --- DOM ЭЛЕМЕНТЫ ---
         const balanceEl = document.getElementById('balance-display');
         const mainMenu = document.getElementById('main-menu');
         const slotPage = document.getElementById('slot-page');
@@ -242,17 +258,22 @@
         const messageBox = document.getElementById('message-box');
         const promoInput = document.getElementById('promo-code');
 
-        // Update UI
+        // --- ОБНОВЛЕНИЕ БАЛАНСА ---
         function updateBalance() {
             balanceEl.textContent = balance.toLocaleString();
         }
 
-        // Navigation
-        function openSlot(id) {mainMenu.style.display = 'none';
+        // --- НАВИГАЦИЯ ---
+        function openSlot(id) {
+            mainMenu.style.display = 'none';
             slotPage.style.display = 'block';
             messageBox.textContent = '';
             betInput.value = '';
             spinBtn.disabled = true;
+            // Сброс барабанов
+            document.getElementById('reel-1').textContent = '?';
+            document.getElementById('reel-2').textContent = '?';
+            document.getElementById('reel-3').textContent = '?';
         }
 
         function openPromo() {
@@ -271,10 +292,12 @@
 
         document.getElementById('open-promo-btn').onclick = openPromo;
 
-        // Bet Logic
+        // --- ЛОГИКА СТАВКИ ---
         function confirmBet() {
             const bet = parseInt(betInput.value);
             messageBox.textContent = '';
+            messageBox.className = 'message-box';
+            
             if (!bet || bet <= 0) {
                 messageBox.textContent = 'Введите корректную сумму.';
                 messageBox.className = 'message-box message-error';
@@ -285,17 +308,18 @@
                 messageBox.className = 'message-box message-error';
                 return;
             }
+            
             spinBtn.disabled = false;
             messageBox.textContent = `Ставка принята: \${bet.toLocaleString()}`;
             messageBox.className = 'message-box message-success';
         }
 
-        // Spin Logic
+        // --- ЛОГИКА ВРАЩЕНИЯ (SPIN) ---
         function spinReels() {
             const bet = parseInt(betInput.value);
             if (!bet || bet <= 0 || bet > balance) return;
 
-            // Deduct bet
+            // Списываем ставку
             balance -= bet;
             updateBalance();
 
@@ -305,16 +329,10 @@
                 document.getElementById('reel-3')
             ];
 
-            // Stop animation after delay
-            const stopReels = () => {
-                reels.forEach(r => r.classList.remove('spinning'));
-                checkWin(reels.map(r => r.textContent));
-            };
-
-            // Start spinning
+            // Запускаем анимацию
             reels.forEach(r => r.classList.add('spinning'));
 
-            // Generate results (weighted random)
+            // Генерируем результаты (взвешенный рандом)
             const results = ;
             reels.forEach(() => {
                 const totalWeight = SYMBOLS.reduce((sum, s) => sum + s.freq, 0);
@@ -327,22 +345,24 @@
                         break;
                     }
                 }
-            });
-
-            // Simulate spin duration
+            });// Останавливаем анимацию и показываем результат
             setTimeout(() => {
                 reels.forEach((r, i) => {
+                    r.classList.remove('spinning');
                     r.textContent = results[i].name;
                 });
-                stopReels();
-            }, 2000);
+                checkWin(results);
+            }, 2000); // Длительность вращения 2 секунды
         }
 
-        function checkWin(symbols) {
+        // --- ПРОВЕРКА ВЫИГРЫША ---
+        function checkWin(results) {
             messageBox.textContent = '';
             messageBox.className = 'message-box';
 
-            // Jackpot: three 7s
+            const symbols = results.map(r => r.name);
+
+            // ДЖЕКПОТ: три семерки
             if (symbols.every(s => s === '7')) {
                 const winAmount = 1000000;
                 balance += winAmount;
@@ -352,14 +372,17 @@
                 return;
             }
 
-            // Check for matching symbols
+            // Обычные совпадения (3 одинаковых)
+            // Считаем количество каждого символа
             const counts = {};
             symbols.forEach(s => counts[s] = (counts[s] || 0) + 1);
-            const triple = Object.keys(counts).find(k => counts[k] === 3);
+            const tripleSymbolName = Object.keys(counts).find(k => counts[k] === 3);
             
-            if (triple) {
-                const symbolData = SYMBOLS.find(s => s.name === triple);
-                const winAmount = symbolData.val * 10; // x10 multiplier for 3-of-a-kindbalance += winAmount;
+            if (tripleSymbolName) {
+                const symbolData = SYMBOLS.find(s => s.name === tripleSymbolName);
+                // Выплата = стоимость символа * 10 (множитель за 3 штуки)
+                const winAmount = symbolData.val * 10; 
+                balance += winAmount;
                 updateBalance();
                 messageBox.textContent = `Вы выиграли \${winAmount.toLocaleString()}!`;
                 messageBox.className = 'message-box message-success';
@@ -368,10 +391,11 @@
             }
         }
 
-        // Promo Codes
+        // --- ПРОМОКОДЫ ---
         function applyPromo() {
             const code = promoInput.value.trim().toUpperCase();
             let bonus = 0;
+            
             if (code === 'PASHA' || code === 'DIMA') {
                 bonus = 3000000;
             }
@@ -388,6 +412,7 @@
             }
         }
 
+        // Инициализация
         updateBalance();
     </script>
 </body>
